@@ -1,0 +1,24 @@
+{
+    "env": {
+        "browser": true,
+        "commonjs": true,
+        "es6": true
+    },
+    "parserOptions": {
+        "ecmaFeatures": {
+            "experimentalObjectRestSpread": true
+        },
+        "sourceType": "module"
+    },
+    "extends": "airbnb-base",
+    "rules": {
+      "no-console": [ 1 ],
+      "max-len": [1, 100],
+      "no-unused-vars": 1,
+      "no-param-reassign": 1,
+      "class-methods-use-this": 1,
+      "comma-dangle": 0,
+      "arrow-body-style": [0, "never"],
+      "import/no-extraneous-dependencies": 0
+    }
+}

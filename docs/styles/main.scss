@@ -1,0 +1,123 @@
+@import 'normalize.css/normalize';
+@import '../../dist/palette';
+@import 'fonts';
+
+$color1: rgba(117, 79, 68, 1);
+$color2: rgba(236, 115, 87, 1);
+$color3: rgba(225, 206, 122, 1);
+$color4: rgba(253, 214, 146, 1);
+$color5: rgba(251, 255, 185, 1);
+
+@function tint($color, $percentage) {
+  @return mix(white, $color, $percentage);
+}
+
+@function shade($color, $percentage) {
+  @return mix(black, $color, $percentage);
+}
+
+*, *:before, *:after {
+  box-sizing: border-box;
+}
+
+::selection {
+  color: $color4;
+  background: $color2;
+}
+
+::-moz-selection {
+  color: $color4;
+  background: $color2;
+}
+
+html {
+  font-size: 10px;
+  font-family: 'Ubuntu', sans-serif;
+}
+
+body {
+  position: relative;
+  width: 100%;
+  background: lighten($color4, 10%);
+}
+
+.wrapper {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  max-width: 640px;
+  padding: 18px 18px 80px;
+  margin: 0 auto;
+  text-align: center;
+
+  p {
+    font-size: 2rem;
+    line-height: 1.4;
+    text-align: left;
+    font-family: 'BLOKK';
+    color: tint($color1, 20%);
+  }
+}
+
+.site-header {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4rem 0;
+}
+
+.site-footer {
+  padding: 18px;
+  text-align: right;
+
+  a {
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: $color1;
+  }
+}
+
+.lib-name {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  font-size: 3rem;
+  line-height: .85;
+  color: $color2;
+
+  span {
+    display: block;
+    font-size: .5em;
+    font-weight: normal;
+    text-align: left;
+    color: $color1;
+  }
+}
+
+.back-btn {
+	display: block;
+	position: absolute;
+	left: 0;
+	// top: 0;
+	width: 0;
+	height: 0;
+  text-indent: -10000px;
+
+	border-top: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid $color1;
+}
+
+.instructions {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 50%;
+  height: 50%;
+  // background: url('images/') no-repeat;
+}
+
+.js-active .instructions {
+  // background: url('images/') no-repeat;
+}
