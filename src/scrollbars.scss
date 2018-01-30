@@ -1,0 +1,26 @@
+.scrollbars__scroll-container {
+  position: relative;
+  height: 100%;
+  margin-right: -20px;
+  padding-right: 20px;
+  overflow-Y: scroll;
+}
+
+.scrollbars__scrollbar-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 16px;
+  background: #fff;
+}
+
+.scrollbars__scrollbar {
+  position: absolute;
+  top: 0;
+  right: 5px;
+  width: 6px;
+  height: 100%;
+  background: #000;
+  border-radius: 6px;
+}
