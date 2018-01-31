@@ -2,7 +2,8 @@ class Scrollbars {
   constructor(options = {}) {
     this.settings = {
       selector: '.scrollbars',
-      className: 'scrollbars'
+      className: 'scrollbars',
+      contentClass: 'scrollbars__content-wrapper'
     };
 
     Object.keys(options).forEach((option) => {
@@ -37,68 +38,67 @@ class Scrollbars {
     return newWrapper;
   }
 
-  static initDragHandler(scrollWrapper, bar) {
-    const raf = window.requestAnimationFrame
-    || window.webkitRequestAnimationFrame
-    || window.mozRequestAnimationFrame
-    || window.msRequestAnimationFrame;
-    // || function(cb) {
-    //   return window.setTimeout(cb, 1000 / 60);
-    // };
-
-    const scrollRatio = scrollWrapper.clientHeight / scrollWrapper.scrollHeight;
-    let lastpageY;
-
-    const drag = (event) => {
-      const delta = event.pageY - lastpageY;
-
-      lastpageY = event.pageY;
-
-      raf(() => {
-        scrollWrapper.scrollTop += delta / scrollRatio;
-      });
-    };
-
-    const stop = () => {
-      document.removeEventListener('mousemove', drag, false);
-      document.removeEventListener('mouseup', stop, false);
-
-      document.getElementsByTagName('body')[0].classList.remove('scrollbar-grabbed');
-      bar.classList.remove(`${this.settings.className}__bar--grabbed`);
-    };
-
-    bar.addEventListener('mousedown', (event) => {
-      lastpageY = event.pageY;
-
-      document.addEventListener('mousemove', drag, false);
-      document.addEventListener('mouseup', stop, false);
-
-      document.getElementsByTagName('body')[0].classList.add('scrollbar-grabbed');
-      bar.classList.add(`${this.settings.className}__bar--grabbed`);
-
-      event.preventDefault();
-    }, false);
-  }
-
-  static bindEvents(scrollWrapper, bar) {
-    scrollWrapper.addEventListener('scroll', (event) => {
-      Scrollbars.calcBarPosition(scrollWrapper, bar);
-    });
-
-    window.addEventListener('resize', event => Scrollbars.calcBarParams(scrollWrapper, bar));
-
-    window.addEventListener('load', (event) => {
-      Scrollbars.calcBarParams(scrollWrapper, bar);
-      bar.style.visibility = 'visible';
-    });
-
-    Scrollbars.initDragHandler(scrollWrapper, bar);
+  static getRAFHandler() {
+    return window.requestAnimationFrame ||
+      window.webkitRequestAnimationFrame ||
+      window.mozRequestAnimationFrame ||
+      window.msRequestAnimationFrame ||
+      (cb => window.setTimeout(cb, 1000 / 60));
   }
 
   static createElement(tag, className) {
     const element = document.createElement(tag);
     element.classList.add(className);
     return element;
+  }
+
+  dragStart(startEvent, scrollWrapper, bar) {
+    const scrollRatio = scrollWrapper.clientHeight / scrollWrapper.scrollHeight;
+    let lastpageY = event.pageY;
+
+    bar.parentNode.classList.add(`${this.settings.className}__bar-wrapper--grabbed`);
+
+    const drag = (event) => {
+      const delta = event.pageY - lastpageY;
+      const scrollShift = delta / scrollRatio;
+
+      lastpageY = event.pageY;
+
+      Scrollbars.getRAFHandler()(() => {
+        scrollWrapper.scrollTop += scrollShift;
+      });
+    };
+
+    const dragStop = (event) => {
+      document.removeEventListener('mousemove', drag, false);
+      document.removeEventListener('mouseup', dragStop, false);
+
+      bar.parentNode.classList.remove(`${this.settings.className}__bar-wrapper--grabbed`);
+    };
+
+    document.addEventListener('mousemove', drag);
+    document.addEventListener('mouseup', dragStop);
+
+    startEvent.preventDefault();
+  }
+
+  bindEvents(scrollWrapper, bar) {
+    scrollWrapper.addEventListener('scroll', (event) => {
+      Scrollbars.calcBarPosition(scrollWrapper, bar);
+    });
+
+    bar.addEventListener('mousedown', (event) => {
+      this.dragStart(event, scrollWrapper, bar);
+    });
+
+    window.addEventListener('resize', (event) => {
+      Scrollbars.calcBarParams(scrollWrapper, bar);
+    });
+
+    window.addEventListener('load', (event) => {
+      Scrollbars.calcBarParams(scrollWrapper, bar);
+      bar.style.visibility = 'visible';
+    });
   }
 
   createScrollbars(scrollContainer) {
@@ -115,10 +115,11 @@ class Scrollbars {
     barWrapper.appendChild(bar);
     scrollContainer.appendChild(barWrapper);
 
+    contentWrapper.classList.add(this.settings.contentClass);
     scrollWrapper.appendChild(contentWrapper);
     scrollContainer.appendChild(scrollWrapper);
 
-    Scrollbars.bindEvents(scrollWrapper, bar);
+    this.bindEvents(scrollWrapper, bar);
   }
 
   initScrollContainers() {
