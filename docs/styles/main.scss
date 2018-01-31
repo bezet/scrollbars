@@ -2,11 +2,17 @@
 @import '../../dist/scrollbars';
 @import 'fonts';
 
-$color1: rgba(117, 79, 68, 1);
-$color2: rgba(236, 115, 87, 1);
-$color3: rgba(225, 206, 122, 1);
-$color4: rgba(253, 214, 146, 1);
-$color5: rgba(251, 255, 185, 1);
+// $color1: rgba(117, 79, 68, 1);
+// $color2: rgba(236, 115, 87, 1);
+// $color3: rgba(225, 206, 122, 1);
+// $color4: rgba(253, 214, 146, 1);
+// $color5: rgba(251, 255, 185, 1);
+
+$color1: rgba(251, 76, 61, 1);
+$color2: rgba(252, 252, 252, 1);
+$color3: rgba(219, 224, 228, 1);
+$color4: rgba(77, 79, 80, 1);
+$color5: rgba(161, 160, 159, 1);
 
 @function tint($color, $percentage) {
   @return mix(white, $color, $percentage);
@@ -38,7 +44,7 @@ html {
 body {
   position: relative;
   width: 100%;
-  background: lighten($color4, 10%);
+  background: $color4;
 }
 
 .wrapper {
@@ -87,14 +93,14 @@ body {
   margin: 0;
   font-size: 3rem;
   line-height: .85;
-  color: $color2;
+  color: $color1;
 
   span {
     display: block;
     font-size: .5em;
     font-weight: normal;
     text-align: left;
-    color: $color1;
+    color: $color2;
   }
 }
 
@@ -124,5 +130,10 @@ body {
 
   p {
     margin: 0;
+    color: $color3;
   }
+}
+
+.scrollbars__bar {
+  background: $color1;
 }
