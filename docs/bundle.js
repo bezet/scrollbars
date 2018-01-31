@@ -76,7 +76,9 @@ var _scrollbars2 = _interopRequireDefault(_scrollbars);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-var myScrollbars = new _scrollbars2.default();
+var myScrollbars = new _scrollbars2.default({
+  contentClass: 'content-container__content'
+});
 
 /***/ }),
 /* 1 */
@@ -105,7 +107,8 @@ var Scrollbars = function () {
 
     this.settings = {
       selector: '.scrollbars',
-      className: 'scrollbars'
+      className: 'scrollbars',
+      contentClass: 'scroll-content'
     };
 
     Object.keys(options).forEach(function (option) {
@@ -117,6 +120,61 @@ var Scrollbars = function () {
   }
 
   _createClass(Scrollbars, [{
+    key: 'dragStart',
+    value: function dragStart(startEvent, scrollWrapper, bar) {
+      var _this2 = this;
+
+      var scrollRatio = scrollWrapper.clientHeight / scrollWrapper.scrollHeight;
+      var lastpageY = event.pageY;
+
+      bar.parentNode.classList.add(this.settings.className + '__bar-wrapper--grabbed');
+
+      var drag = function drag(event) {
+        var delta = event.pageY - lastpageY;
+        var scrollShift = delta / scrollRatio;
+
+        lastpageY = event.pageY;
+
+        Scrollbars.getRAFHandler()(function () {
+          scrollWrapper.scrollTop += scrollShift;
+        });
+      };
+
+      var dragStop = function dragStop(event) {
+        document.removeEventListener('mousemove', drag, false);
+        document.removeEventListener('mouseup', dragStop, false);
+
+        bar.parentNode.classList.remove(_this2.settings.className + '__bar-wrapper--grabbed');
+      };
+
+      document.addEventListener('mousemove', drag);
+      document.addEventListener('mouseup', dragStop);
+
+      startEvent.preventDefault();
+    }
+  }, {
+    key: 'bindEvents',
+    value: function bindEvents(scrollWrapper, bar) {
+      var _this3 = this;
+
+      scrollWrapper.addEventListener('scroll', function (event) {
+        Scrollbars.calcBarPosition(scrollWrapper, bar);
+      });
+
+      bar.addEventListener('mousedown', function (event) {
+        _this3.dragStart(event, scrollWrapper, bar);
+      });
+
+      window.addEventListener('resize', function (event) {
+        Scrollbars.calcBarParams(scrollWrapper, bar);
+      });
+
+      window.addEventListener('load', function (event) {
+        Scrollbars.calcBarParams(scrollWrapper, bar);
+        bar.style.visibility = 'visible';
+      });
+    }
+  }, {
     key: 'createScrollbars',
     value: function createScrollbars(scrollContainer) {
       scrollContainer.classList.add('' + this.settings.className);
@@ -132,18 +190,19 @@ var Scrollbars = function () {
       barWrapper.appendChild(bar);
       scrollContainer.appendChild(barWrapper);
 
+      contentWrapper.classList.add(this.settings.contentClass);
       scrollWrapper.appendChild(contentWrapper);
       scrollContainer.appendChild(scrollWrapper);
 
-      Scrollbars.bindEvents(scrollWrapper, bar);
+      this.bindEvents(scrollWrapper, bar);
     }
   }, {
     key: 'initScrollContainers',
     value: function initScrollContainers() {
-      var _this2 = this;
+      var _this4 = this;
 
       [].concat(_toConsumableArray(this.scrollContainers)).forEach(function (scrollContainer) {
-        _this2.createScrollbars(scrollContainer);
+        _this4.createScrollbars(scrollContainer);
       });
     }
   }], [{
@@ -175,65 +234,11 @@ var Scrollbars = function () {
       return newWrapper;
     }
   }, {
-    key: 'initDragHandler',
-    value: function initDragHandler(scrollWrapper, bar) {
-      var _this3 = this;
-
-      var raf = window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame;
-      // || function(cb) {
-      //   return window.setTimeout(cb, 1000 / 60);
-      // };
-
-      var scrollRatio = scrollWrapper.clientHeight / scrollWrapper.scrollHeight;
-      var lastpageY = void 0;
-
-      var drag = function drag(event) {
-        var delta = event.pageY - lastpageY;
-
-        lastpageY = event.pageY;
-
-        raf(function () {
-          scrollWrapper.scrollTop += delta / scrollRatio;
-        });
+    key: 'getRAFHandler',
+    value: function getRAFHandler() {
+      return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.msRequestAnimationFrame || function (cb) {
+        return window.setTimeout(cb, 1000 / 60);
       };
-
-      var stop = function stop() {
-        document.removeEventListener('mousemove', drag, false);
-        document.removeEventListener('mouseup', stop, false);
-
-        document.getElementsByTagName('body')[0].classList.remove('scrollbar-grabbed');
-        bar.classList.remove(_this3.settings.className + '__bar--grabbed');
-      };
-
-      bar.addEventListener('mousedown', function (event) {
-        lastpageY = event.pageY;
-
-        document.addEventListener('mousemove', drag, false);
-        document.addEventListener('mouseup', stop, false);
-
-        document.getElementsByTagName('body')[0].classList.add('scrollbar-grabbed');
-        bar.classList.add(_this3.settings.className + '__bar--grabbed');
-
-        event.preventDefault();
-      }, false);
-    }
-  }, {
-    key: 'bindEvents',
-    value: function bindEvents(scrollWrapper, bar) {
-      scrollWrapper.addEventListener('scroll', function (event) {
-        Scrollbars.calcBarPosition(scrollWrapper, bar);
-      });
-
-      window.addEventListener('resize', function (event) {
-        return Scrollbars.calcBarParams(scrollWrapper, bar);
-      });
-
-      window.addEventListener('load', function (event) {
-        Scrollbars.calcBarParams(scrollWrapper, bar);
-        bar.style.visibility = 'visible';
-      });
-
-      Scrollbars.initDragHandler(scrollWrapper, bar);
     }
   }, {
     key: 'createElement',

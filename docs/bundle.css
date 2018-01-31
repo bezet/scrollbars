@@ -450,7 +450,11 @@ template {
   top: 4px;
   bottom: 4px;
   right: 0;
-  width: 8px;
+  width: 6px;
+  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  transition: opacity 300ms ease 200ms;
 }
 
 .scrollbars__bar {
@@ -460,15 +464,14 @@ template {
   -webkit-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
-  width: 6px;
+  width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 6px;
-  opacity: 0;
-  transition: opacity 300ms ease 200ms;
 }
 
-.scrollbars:hover .scrollbars__bar {
+.scrollbars:hover .scrollbars__bar-wrapper,
+.scrollbars__bar-wrapper--grabbed {
   opacity: 1;
 }
 
@@ -522,7 +525,6 @@ body {
   position: relative;
   height: 100%;
   width: 100%;
-  max-width: 640px;
   padding: 18px 18px 80px;
   margin: 0 auto;
   text-align: center;
@@ -587,9 +589,16 @@ body {
   border-right: 10px solid #754f44;
 }
 
+.containers {
+  display: -webkit-box;
+  display: flex;
+  align-content: space-between;
+}
+
 .content-container {
   height: 50vh;
   overflow: auto;
+  margin: 20px;
 }
 
 .content-container p {
