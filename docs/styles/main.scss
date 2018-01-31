@@ -45,7 +45,7 @@ body {
   position: relative;
   height: 100%;
   width: 100%;
-  max-width: 640px;
+  // max-width: 640px;
   padding: 18px 18px 80px;
   margin: 0 auto;
   text-align: center;
@@ -112,10 +112,15 @@ body {
 	border-right: 10px solid $color1;
 }
 
+.containers {
+  display: flex;
+  align-content: space-between;
+}
+
 .content-container {
   height: 50vh;
   overflow: auto;
-  // padding: 20px;
+  margin: 20px;
 
   p {
     margin: 0;
