@@ -49,9 +49,9 @@ body {
   padding: 18px 18px 80px;
   margin: 0 auto;
   text-align: center;
-  border: 1px solid #000;
-  border-top: 0;
-  border-bottom: 0;
+  // border: 1px solid #000;
+  // border-top: 0;
+  // border-bottom: 0;
 
   p {
     font-size: 2rem;
@@ -115,4 +115,9 @@ body {
 .content-container {
   height: 50vh;
   overflow: auto;
+  // padding: 20px;
+
+  p {
+    margin: 0;
+  }
 }
