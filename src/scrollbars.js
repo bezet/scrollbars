@@ -3,7 +3,8 @@ class Scrollbars {
     this.settings = {
       selector: '.scrollbars',
       className: 'scrollbars',
-      contentClass: 'scrollbars__content-wrapper'
+      contentClass: 'scrollbars__content-wrapper',
+      hoverable: true
     };
 
     Object.keys(options).forEach((option) => {
@@ -12,6 +13,20 @@ class Scrollbars {
 
     this.scrollContainers = document.querySelectorAll(this.settings.selector);
     this.initScrollContainers();
+  }
+
+  static setBarVisibility(barY, barX) {
+    if (barY.style.height !== '100%') {
+      barY.parentNode.style.visibility = 'visible';
+    } else {
+      barY.parentNode.style.visibility = 'hidden';
+    }
+
+    if (barX.style.width !== '100%') {
+      barX.parentNode.style.visibility = 'visible';
+    } else {
+      barX.parentNode.style.visibility = 'hidden';
+    }
   }
 
   static calcBarXPosition(scrollWrapper, bar) {
@@ -32,8 +47,8 @@ class Scrollbars {
 
   static calcBarParams(scrollWrapper, barY, barX) {
     Scrollbars.calcBarYLength(scrollWrapper, barY);
-    Scrollbars.calcBarYPosition(scrollWrapper, barY);
     Scrollbars.calcBarXLength(scrollWrapper, barX);
+    Scrollbars.calcBarYPosition(scrollWrapper, barY);
     Scrollbars.calcBarXPosition(scrollWrapper, barX);
   }
 
@@ -95,25 +110,34 @@ class Scrollbars {
   bindEvents(scrollWrapper, barY, barX) {
     scrollWrapper.addEventListener('scroll', (event) => {
       Scrollbars.calcBarYPosition(scrollWrapper, barY);
+      Scrollbars.calcBarXPosition(scrollWrapper, barX);
     });
 
     barY.addEventListener('mousedown', (event) => {
       this.dragStart(event, scrollWrapper, barY);
     });
 
+    // barX.addEventListener('mousedown', (event) => {
+    //   this.dragStart(event, scrollWrapper, barX);
+    // });
+
     window.addEventListener('resize', (event) => {
-      Scrollbars.calcBarParams(scrollWrapper, barY);
+      Scrollbars.calcBarParams(scrollWrapper, barY, barX);
+      Scrollbars.setBarVisibility(barY, barX);
     });
 
     window.addEventListener('load', (event) => {
       Scrollbars.calcBarParams(scrollWrapper, barY, barX);
-      barY.style.visibility = 'visible';
-      barX.style.visibility = 'visible';
+      Scrollbars.setBarVisibility(barY, barX);
     });
   }
 
   createScrollbars(scrollContainer) {
     scrollContainer.classList.add(`${this.settings.className}`);
+
+    if (this.settings.hoverable) {
+      scrollContainer.classList.add(`${this.settings.className}--hoverable`);
+    }
 
     const contentWrapper = Scrollbars.createElement('div', `${this.settings.className}__content-wrapper`);
     const scrollWrapper = Scrollbars.createElement('div', `${this.settings.className}__scroll-wrapper`);
@@ -126,11 +150,11 @@ class Scrollbars {
 
     Scrollbars.wrapContent(scrollContainer, contentWrapper);
 
-    barX.style.visibility = 'hidden';
+    barWrapperX.style.visibility = 'hidden';
     barWrapperX.appendChild(barX);
     scrollContainer.appendChild(barWrapperX);
 
-    barY.style.visibility = 'hidden';
+    barWrapperY.style.visibility = 'hidden';
     barWrapperY.appendChild(barY);
     scrollContainer.appendChild(barWrapperY);
 
