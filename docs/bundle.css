@@ -442,35 +442,60 @@ template {
   height: 100%;
   margin-right: -20px;
   padding-right: 10px;
+  margin-bottom: -20px;
+  padding-bottom: 10px;
   overflow-Y: scroll;
 }
 
-.scrollbars__bar-wrapper {
+.scrollbars__bar-wrapper-x,
+.scrollbars__bar-wrapper-y {
   position: absolute;
-  top: 4px;
-  bottom: 4px;
-  right: 0;
-  width: 6px;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.1);
   opacity: 0;
   transition: opacity 300ms ease 200ms;
 }
 
-.scrollbars__bar {
-  position: absolute;
+.scrollbars__bar-wrapper-y {
+  top: 4px;
+  bottom: 4px;
+  right: 0;
+  width: 6px;
+}
+
+.scrollbars__bar-wrapper-y .scrollbars__bar {
   top: 0;
   left: 50%;
   -webkit-transform: translateX(-50%);
   -ms-transform: translateX(-50%);
   transform: translateX(-50%);
+}
+
+.scrollbars__bar-wrapper-x {
+  bottom: 0;
+  left: 4px;
+  right: 4px;
+  height: 6px;
+}
+
+.scrollbars__bar-wrapper-x .scrollbars__bar {
+  left: 0;
+  top: 50%;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+}
+
+.scrollbars__bar {
+  position: absolute;
   width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.25);
   border-radius: 6px;
 }
 
-.scrollbars:hover .scrollbars__bar-wrapper,
+.scrollbars:hover .scrollbars__bar-wrapper-y,
+.scrollbars:hover .scrollbars__bar-wrapper-x,
 .scrollbars__bar-wrapper--grabbed {
   opacity: 1;
 }
@@ -501,13 +526,13 @@ body {
 }
 
 ::selection {
-  color: #fdd692;
-  background: #ec7357;
+  color: #4d4f50;
+  background: #fcfcfc;
 }
 
 ::-moz-selection {
-  color: #fdd692;
-  background: #ec7357;
+  color: #4d4f50;
+  background: #fcfcfc;
 }
 
 html {
@@ -518,7 +543,7 @@ html {
 body {
   position: relative;
   width: 100%;
-  background: #fee9c4;
+  background: #4d4f50;
 }
 
 .wrapper {
@@ -535,7 +560,7 @@ body {
   line-height: 1.4;
   text-align: left;
   font-family: 'BLOKK';
-  color: #917269;
+  color: #fc7064;
 }
 
 .site-header {
@@ -557,7 +582,7 @@ body {
 .site-footer a {
   font-size: 1.4rem;
   line-height: 1.4;
-  color: #754f44;
+  color: #fb4c3d;
 }
 
 .lib-name {
@@ -566,7 +591,7 @@ body {
   margin: 0;
   font-size: 3rem;
   line-height: .85;
-  color: #ec7357;
+  color: #fb4c3d;
 }
 
 .lib-name span {
@@ -574,7 +599,7 @@ body {
   font-size: .5em;
   font-weight: normal;
   text-align: left;
-  color: #754f44;
+  color: #fcfcfc;
 }
 
 .back-btn {
@@ -586,7 +611,7 @@ body {
   text-indent: -10000px;
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
-  border-right: 10px solid #754f44;
+  border-right: 10px solid #fb4c3d;
 }
 
 .containers {
@@ -596,6 +621,7 @@ body {
 }
 
 .content-container {
+  width: 33%;
   height: 50vh;
   overflow: auto;
   margin: 20px;
@@ -603,6 +629,11 @@ body {
 
 .content-container p {
   margin: 0;
+  color: #dbe0e4;
+}
+
+.scrollbars__bar {
+  background: #fb4c3d;
 }
 
 /*# sourceMappingURL=bundle.css.map */

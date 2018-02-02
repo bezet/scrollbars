@@ -108,7 +108,7 @@ var Scrollbars = function () {
     this.settings = {
       selector: '.scrollbars',
       className: 'scrollbars',
-      contentClass: 'scroll-content'
+      contentClass: 'scrollbars__content-wrapper'
     };
 
     Object.keys(options).forEach(function (option) {
@@ -154,24 +154,25 @@ var Scrollbars = function () {
     }
   }, {
     key: 'bindEvents',
-    value: function bindEvents(scrollWrapper, bar) {
+    value: function bindEvents(scrollWrapper, barY, barX) {
       var _this3 = this;
 
       scrollWrapper.addEventListener('scroll', function (event) {
-        Scrollbars.calcBarPosition(scrollWrapper, bar);
+        Scrollbars.calcBarYPosition(scrollWrapper, barY);
       });
 
-      bar.addEventListener('mousedown', function (event) {
-        _this3.dragStart(event, scrollWrapper, bar);
+      barY.addEventListener('mousedown', function (event) {
+        _this3.dragStart(event, scrollWrapper, barY);
       });
 
       window.addEventListener('resize', function (event) {
-        Scrollbars.calcBarParams(scrollWrapper, bar);
+        Scrollbars.calcBarParams(scrollWrapper, barY);
       });
 
       window.addEventListener('load', function (event) {
-        Scrollbars.calcBarParams(scrollWrapper, bar);
-        bar.style.visibility = 'visible';
+        Scrollbars.calcBarParams(scrollWrapper, barY, barX);
+        barY.style.visibility = 'visible';
+        barX.style.visibility = 'visible';
       });
     }
   }, {
@@ -181,20 +182,28 @@ var Scrollbars = function () {
 
       var contentWrapper = Scrollbars.createElement('div', this.settings.className + '__content-wrapper');
       var scrollWrapper = Scrollbars.createElement('div', this.settings.className + '__scroll-wrapper');
-      var barWrapper = Scrollbars.createElement('div', this.settings.className + '__bar-wrapper');
-      var bar = Scrollbars.createElement('div', this.settings.className + '__bar');
+
+      var barWrapperY = Scrollbars.createElement('div', this.settings.className + '__bar-wrapper-y');
+      var barY = Scrollbars.createElement('div', this.settings.className + '__bar');
+
+      var barWrapperX = Scrollbars.createElement('div', this.settings.className + '__bar-wrapper-x');
+      var barX = Scrollbars.createElement('div', this.settings.className + '__bar');
 
       Scrollbars.wrapContent(scrollContainer, contentWrapper);
 
-      bar.style.visibility = 'hidden';
-      barWrapper.appendChild(bar);
-      scrollContainer.appendChild(barWrapper);
+      barX.style.visibility = 'hidden';
+      barWrapperX.appendChild(barX);
+      scrollContainer.appendChild(barWrapperX);
+
+      barY.style.visibility = 'hidden';
+      barWrapperY.appendChild(barY);
+      scrollContainer.appendChild(barWrapperY);
 
       contentWrapper.classList.add(this.settings.contentClass);
       scrollWrapper.appendChild(contentWrapper);
       scrollContainer.appendChild(scrollWrapper);
 
-      this.bindEvents(scrollWrapper, bar);
+      this.bindEvents(scrollWrapper, barY, barX);
     }
   }, {
     key: 'initScrollContainers',
@@ -206,20 +215,32 @@ var Scrollbars = function () {
       });
     }
   }], [{
-    key: 'calcBarPosition',
-    value: function calcBarPosition(scrollWrapper, bar) {
+    key: 'calcBarXPosition',
+    value: function calcBarXPosition(scrollWrapper, bar) {
+      bar.style.left = scrollWrapper.scrollLeft / scrollWrapper.scrollWidth * 100 + '%';
+    }
+  }, {
+    key: 'calcBarXLength',
+    value: function calcBarXLength(scrollWrapper, bar) {
+      bar.style.width = scrollWrapper.clientWidth / scrollWrapper.scrollWidth * 100 + '%';
+    }
+  }, {
+    key: 'calcBarYPosition',
+    value: function calcBarYPosition(scrollWrapper, bar) {
       bar.style.top = scrollWrapper.scrollTop / scrollWrapper.scrollHeight * 100 + '%';
     }
   }, {
-    key: 'calcBarHeight',
-    value: function calcBarHeight(scrollWrapper, bar) {
+    key: 'calcBarYLength',
+    value: function calcBarYLength(scrollWrapper, bar) {
       bar.style.height = scrollWrapper.clientHeight / scrollWrapper.scrollHeight * 100 + '%';
     }
   }, {
     key: 'calcBarParams',
-    value: function calcBarParams(scrollWrapper, bar) {
-      Scrollbars.calcBarHeight(scrollWrapper, bar);
-      Scrollbars.calcBarPosition(scrollWrapper, bar);
+    value: function calcBarParams(scrollWrapper, barY, barX) {
+      Scrollbars.calcBarYLength(scrollWrapper, barY);
+      Scrollbars.calcBarYPosition(scrollWrapper, barY);
+      Scrollbars.calcBarXLength(scrollWrapper, barX);
+      Scrollbars.calcBarXPosition(scrollWrapper, barX);
     }
   }, {
     key: 'wrapContent',
