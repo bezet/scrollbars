@@ -135,7 +135,8 @@ body {
   }
 }
 
-.content-container--wide {
+.content-container--wide .content-container__content {
+  width: 150%;
 }
 
 .scrollbars__bar {
