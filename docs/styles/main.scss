@@ -124,6 +124,7 @@ body {
 }
 
 .content-container {
+  width: 33%;
   height: 50vh;
   overflow: auto;
   margin: 20px;
@@ -132,6 +133,9 @@ body {
     margin: 0;
     color: $color3;
   }
+}
+
+.content-container--wide {
 }
 
 .scrollbars__bar {
