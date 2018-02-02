@@ -436,14 +436,15 @@ template {
 .scrollbars {
   position: relative;
   overflow: hidden !important;
+  display: -webkit-box;
+  display: flex;
 }
 
 .scrollbars__scroll-wrapper {
-  height: 100%;
   margin-right: -20px;
-  padding-right: 10px;
+  padding-right: 20px;
   margin-bottom: -20px;
-  padding-bottom: 10px;
+  padding-bottom: 20px;
   overflow-Y: scroll;
 }
 
@@ -452,14 +453,12 @@ template {
   position: absolute;
   border-radius: 6px;
   background: rgba(0, 0, 0, 0.1);
-  opacity: 0;
-  transition: opacity 300ms ease 200ms;
 }
 
 .scrollbars__bar-wrapper-y {
-  top: 4px;
-  bottom: 4px;
   right: 0;
+  top: 6px;
+  bottom: 6px;
   width: 6px;
 }
 
@@ -473,8 +472,8 @@ template {
 
 .scrollbars__bar-wrapper-x {
   bottom: 0;
-  left: 4px;
-  right: 4px;
+  left: 6px;
+  right: 6px;
   height: 6px;
 }
 
@@ -494,9 +493,15 @@ template {
   border-radius: 6px;
 }
 
-.scrollbars:hover .scrollbars__bar-wrapper-y,
-.scrollbars:hover .scrollbars__bar-wrapper-x,
-.scrollbars__bar-wrapper--grabbed {
+.scrollbars--hoverable .scrollbars__bar-wrapper-x,
+.scrollbars--hoverable .scrollbars__bar-wrapper-y {
+  opacity: 0;
+  transition: opacity 300ms ease 200ms;
+}
+
+.scrollbars--hoverable:hover .scrollbars__bar-wrapper-y,
+.scrollbars--hoverable:hover .scrollbars__bar-wrapper-x,
+.scrollbars--hoverable .scrollbars__bar-wrapper--grabbed {
   opacity: 1;
 }
 
@@ -630,6 +635,10 @@ body {
 .content-container p {
   margin: 0;
   color: #dbe0e4;
+}
+
+.content-container--wide .content-container__content {
+  width: 150%;
 }
 
 .scrollbars__bar {

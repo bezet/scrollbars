@@ -108,7 +108,8 @@ var Scrollbars = function () {
     this.settings = {
       selector: '.scrollbars',
       className: 'scrollbars',
-      contentClass: 'scrollbars__content-wrapper'
+      contentClass: 'scrollbars__content-wrapper',
+      hoverable: true
     };
 
     Object.keys(options).forEach(function (option) {
@@ -159,26 +160,35 @@ var Scrollbars = function () {
 
       scrollWrapper.addEventListener('scroll', function (event) {
         Scrollbars.calcBarYPosition(scrollWrapper, barY);
+        Scrollbars.calcBarXPosition(scrollWrapper, barX);
       });
 
       barY.addEventListener('mousedown', function (event) {
         _this3.dragStart(event, scrollWrapper, barY);
       });
 
+      // barX.addEventListener('mousedown', (event) => {
+      //   this.dragStart(event, scrollWrapper, barX);
+      // });
+
       window.addEventListener('resize', function (event) {
-        Scrollbars.calcBarParams(scrollWrapper, barY);
+        Scrollbars.calcBarParams(scrollWrapper, barY, barX);
+        Scrollbars.setBarVisibility(barY, barX);
       });
 
       window.addEventListener('load', function (event) {
         Scrollbars.calcBarParams(scrollWrapper, barY, barX);
-        barY.style.visibility = 'visible';
-        barX.style.visibility = 'visible';
+        Scrollbars.setBarVisibility(barY, barX);
       });
     }
   }, {
     key: 'createScrollbars',
     value: function createScrollbars(scrollContainer) {
       scrollContainer.classList.add('' + this.settings.className);
+
+      if (this.settings.hoverable) {
+        scrollContainer.classList.add(this.settings.className + '--hoverable');
+      }
 
       var contentWrapper = Scrollbars.createElement('div', this.settings.className + '__content-wrapper');
       var scrollWrapper = Scrollbars.createElement('div', this.settings.className + '__scroll-wrapper');
@@ -191,11 +201,11 @@ var Scrollbars = function () {
 
       Scrollbars.wrapContent(scrollContainer, contentWrapper);
 
-      barX.style.visibility = 'hidden';
+      barWrapperX.style.visibility = 'hidden';
       barWrapperX.appendChild(barX);
       scrollContainer.appendChild(barWrapperX);
 
-      barY.style.visibility = 'hidden';
+      barWrapperY.style.visibility = 'hidden';
       barWrapperY.appendChild(barY);
       scrollContainer.appendChild(barWrapperY);
 
@@ -215,6 +225,21 @@ var Scrollbars = function () {
       });
     }
   }], [{
+    key: 'setBarVisibility',
+    value: function setBarVisibility(barY, barX) {
+      if (barY.style.height !== '100%') {
+        barY.parentNode.style.visibility = 'visible';
+      } else {
+        barY.parentNode.style.visibility = 'hidden';
+      }
+
+      if (barX.style.width !== '100%') {
+        barX.parentNode.style.visibility = 'visible';
+      } else {
+        barX.parentNode.style.visibility = 'hidden';
+      }
+    }
+  }, {
     key: 'calcBarXPosition',
     value: function calcBarXPosition(scrollWrapper, bar) {
       bar.style.left = scrollWrapper.scrollLeft / scrollWrapper.scrollWidth * 100 + '%';
@@ -238,8 +263,8 @@ var Scrollbars = function () {
     key: 'calcBarParams',
     value: function calcBarParams(scrollWrapper, barY, barX) {
       Scrollbars.calcBarYLength(scrollWrapper, barY);
-      Scrollbars.calcBarYPosition(scrollWrapper, barY);
       Scrollbars.calcBarXLength(scrollWrapper, barX);
+      Scrollbars.calcBarYPosition(scrollWrapper, barY);
       Scrollbars.calcBarXPosition(scrollWrapper, barX);
     }
   }, {
