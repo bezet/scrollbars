@@ -1,8 +1,8 @@
 .scrollbars {
   position: relative;
-  overflow: hidden !important;
   display: -webkit-box;
   display: flex;
+  overflow: hidden !important;
 }
 
 .scrollbars__scroll-wrapper {

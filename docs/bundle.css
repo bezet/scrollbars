@@ -435,9 +435,9 @@ template {
 
 .scrollbars {
   position: relative;
-  overflow: hidden !important;
   display: -webkit-box;
   display: flex;
+  overflow: hidden !important;
 }
 
 .scrollbars__scroll-wrapper {
@@ -634,7 +634,7 @@ body {
 
 .content-container p {
   margin: 0;
-  color: #dbe0e4;
+  color: #6e6d6c;
 }
 
 .content-container--wide .content-container__content {

@@ -122,22 +122,24 @@ var Scrollbars = function () {
 
   _createClass(Scrollbars, [{
     key: 'dragStart',
-    value: function dragStart(startEvent, scrollWrapper, bar) {
+    value: function dragStart(startEvent, scrollWrapper, bar, axis) {
       var _this2 = this;
 
-      var scrollRatio = scrollWrapper.clientHeight / scrollWrapper.scrollHeight;
-      var lastpageY = event.pageY;
+      var positionOnAxis = axis === 'y' ? 'pageY' : 'pageX';
+      var dimension = axis === 'y' ? 'Height' : 'Width';
+      var scrollValue = axis === 'y' ? 'scrollTop' : 'scrollLeft';
 
-      bar.parentNode.classList.add(this.settings.className + '__bar-wrapper--grabbed');
+      var scrollRatio = scrollWrapper['client' + dimension] / scrollWrapper['scroll' + dimension];
+      var lastPointerPosition = startEvent[positionOnAxis];
 
       var drag = function drag(event) {
-        var delta = event.pageY - lastpageY;
+        var delta = event[positionOnAxis] - lastPointerPosition;
         var scrollShift = delta / scrollRatio;
 
-        lastpageY = event.pageY;
+        lastPointerPosition = event[positionOnAxis];
 
         Scrollbars.getRAFHandler()(function () {
-          scrollWrapper.scrollTop += scrollShift;
+          scrollWrapper[scrollValue] += scrollShift;
         });
       };
 
@@ -147,6 +149,8 @@ var Scrollbars = function () {
 
         bar.parentNode.classList.remove(_this2.settings.className + '__bar-wrapper--grabbed');
       };
+
+      bar.parentNode.classList.add(this.settings.className + '__bar-wrapper--grabbed');
 
       document.addEventListener('mousemove', drag);
       document.addEventListener('mouseup', dragStop);
@@ -164,12 +168,12 @@ var Scrollbars = function () {
       });
 
       barY.addEventListener('mousedown', function (event) {
-        _this3.dragStart(event, scrollWrapper, barY);
+        _this3.dragStart(event, scrollWrapper, barY, 'y');
       });
 
-      // barX.addEventListener('mousedown', (event) => {
-      //   this.dragStart(event, scrollWrapper, barX);
-      // });
+      barX.addEventListener('mousedown', function (event) {
+        _this3.dragStart(event, scrollWrapper, barX, 'x');
+      });
 
       window.addEventListener('resize', function (event) {
         Scrollbars.calcBarParams(scrollWrapper, barY, barX);
@@ -227,17 +231,8 @@ var Scrollbars = function () {
   }], [{
     key: 'setBarVisibility',
     value: function setBarVisibility(barY, barX) {
-      if (barY.style.height !== '100%') {
-        barY.parentNode.style.visibility = 'visible';
-      } else {
-        barY.parentNode.style.visibility = 'hidden';
-      }
-
-      if (barX.style.width !== '100%') {
-        barX.parentNode.style.visibility = 'visible';
-      } else {
-        barX.parentNode.style.visibility = 'hidden';
-      }
+      barY.parentNode.style.visibility = barY.style.height !== '100%' ? 'visible' : 'hidden';
+      barX.parentNode.style.visibility = barX.style.width !== '100%' ? 'visible' : 'hidden';
     }
   }, {
     key: 'calcBarXPosition',
