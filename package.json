@@ -49,6 +49,7 @@
   "keywords": [
     "scrollbar"
   ],
+  "homepage": "https://bezet.github.io/scrollbars",
   "repository": "https://github.com/bezet/scrollbars",
   "license": "MIT"
 }
