@@ -68,20 +68,22 @@ class Scrollbars {
     return element;
   }
 
-  dragStart(startEvent, scrollWrapper, bar) {
-    const scrollRatio = scrollWrapper.clientHeight / scrollWrapper.scrollHeight;
-    let lastpageY = event.pageY;
+  dragStart(startEvent, scrollWrapper, bar, axis) {
+    const positionOnAxis = axis === 'y' ? 'pageY' : 'pageX';
+    const dimension = axis === 'y' ? 'Height' : 'Width';
+    const scrollValue = axis === 'y' ? 'scrollTop' : 'scrollLeft';
 
-    bar.parentNode.classList.add(`${this.settings.className}__bar-wrapper--grabbed`);
+    const scrollRatio = scrollWrapper[`client${dimension}`] / scrollWrapper[`scroll${dimension}`];
+    let lastPointerPosition = startEvent[positionOnAxis];
 
     const drag = (event) => {
-      const delta = event.pageY - lastpageY;
+      const delta = event[positionOnAxis] - lastPointerPosition;
       const scrollShift = delta / scrollRatio;
 
-      lastpageY = event.pageY;
+      lastPointerPosition = event[positionOnAxis];
 
       Scrollbars.getRAFHandler()(() => {
-        scrollWrapper.scrollTop += scrollShift;
+        scrollWrapper[scrollValue] += scrollShift;
       });
     };
 
@@ -91,6 +93,8 @@ class Scrollbars {
 
       bar.parentNode.classList.remove(`${this.settings.className}__bar-wrapper--grabbed`);
     };
+
+    bar.parentNode.classList.add(`${this.settings.className}__bar-wrapper--grabbed`);
 
     document.addEventListener('mousemove', drag);
     document.addEventListener('mouseup', dragStop);
@@ -105,12 +109,12 @@ class Scrollbars {
     });
 
     barY.addEventListener('mousedown', (event) => {
-      this.dragStart(event, scrollWrapper, barY);
+      this.dragStart(event, scrollWrapper, barY, 'y');
     });
 
-    // barX.addEventListener('mousedown', (event) => {
-    //   this.dragStart(event, scrollWrapper, barX);
-    // });
+    barX.addEventListener('mousedown', (event) => {
+      this.dragStart(event, scrollWrapper, barX, 'x');
+    });
 
     window.addEventListener('resize', (event) => {
       Scrollbars.calcBarParams(scrollWrapper, barY, barX);
