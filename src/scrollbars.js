@@ -16,17 +16,8 @@ class Scrollbars {
   }
 
   static setBarVisibility(barY, barX) {
-    if (barY.style.height !== '100%') {
-      barY.parentNode.style.visibility = 'visible';
-    } else {
-      barY.parentNode.style.visibility = 'hidden';
-    }
-
-    if (barX.style.width !== '100%') {
-      barX.parentNode.style.visibility = 'visible';
-    } else {
-      barX.parentNode.style.visibility = 'hidden';
-    }
+    barY.parentNode.style.visibility = barY.style.height !== '100%' ? 'visible' : 'hidden';
+    barX.parentNode.style.visibility = barX.style.width !== '100%' ? 'visible' : 'hidden';
   }
 
   static calcBarXPosition(scrollWrapper, bar) {
