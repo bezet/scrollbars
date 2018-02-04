@@ -1,6 +1,6 @@
 {
   "name": "@bezet/scrollbars",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A library providing customized scrollbars to a given elements.",
   "author": {
     "name": "bezet",
